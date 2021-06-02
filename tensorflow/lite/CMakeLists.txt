@@ -356,6 +356,11 @@ if(CMAKE_SYSTEM_NAME MATCHES "Android")
     ${TFLITE_SOURCE_DIR}/profiling/atrace_profiler.cc
   )
 endif()
+if(IOS)
+  list(APPEND TFLITE_PROFILER_SRCS
+    ${TFLITE_SOURCE_DIR}/profiling/signpost_profiler.mm
+  )
+endif()
 
 # Common include directories
 set(TFLITE_INCLUDE_DIRS
