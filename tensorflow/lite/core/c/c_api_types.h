@@ -68,6 +68,16 @@ extern "C" {
 #endif  // _WIN32
 #endif  // SWIG
 
+// Yousician: The TFLITE_C_BUILD_SHARED_LIBS and corresponding 
+// TFL_STATIC_LIBRARY_BUILD do not work consistently. We're always building
+// a shared library anyway.
+#if defined(_WIN32)
+#if defined(TFL_CAPI_EXPORT)
+#undef TFL_CAPI_EXPORT
+#endif
+#define TFL_CAPI_EXPORT __declspec(dllexport)
+#endif
+
 /// Note that new error status values may be added in future in order to
 /// indicate more fine-grained internal states, therefore, applications should
 /// not rely on status values being members of the enum.
