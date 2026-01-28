@@ -284,9 +284,11 @@ TfLiteStatus AbsEvalQuantized(TfLiteContext* context, TfLiteNode* node,
 TfLiteStatus AbsEval(TfLiteContext* context, TfLiteNode* node) {
   const TfLiteTensor* input = GetInput(context, node, 0);
   const TfLiteType type = input->type;
+  const auto absf = [](float value) { return std::abs(value); };
+  const auto absi = [](int32_t value) { return std::abs(value); };
   switch (type) {
     case kTfLiteFloat32:
-      return EvalImpl<float>(context, node, std::abs<float>, type);
+      return EvalImpl<float>(context, node, absf, type);
     case kTfLiteInt8:
       return AbsEvalQuantized<int8_t>(context, node, type);
     case kTfLiteInt16:
@@ -294,7 +296,7 @@ TfLiteStatus AbsEval(TfLiteContext* context, TfLiteNode* node) {
                  ? AbsInt16EvalImpl(context, node, type)
                  : AbsEvalQuantized<int16_t>(context, node, type);
     case kTfLiteInt32:
-      return EvalImpl<int32_t>(context, node, std::abs<int32_t>, type);
+      return EvalImpl<int32_t>(context, node, absi, type);
     default:
       TF_LITE_KERNEL_LOG(context, "Current data type %s is not supported.",
                          TfLiteTypeGetName(type));
